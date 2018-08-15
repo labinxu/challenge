@@ -1,6 +1,6 @@
 #ifndef CHALLENGE_H
 #define CHALLENGE_H
-
+// test web edittest web edit
 #include <stdint.h>
 #include <string>
 // company's order identifier
@@ -17,7 +17,6 @@ struct OrderIdentifier {
     uint16_t _trader{0};
     uint32_t _sequence{0};
 };
-
 
 struct Order{
     OrderIdentifier _orderIdentifier;
