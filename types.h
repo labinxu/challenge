@@ -1,8 +1,10 @@
-#ifndef CHALLENGE_H
-#define CHALLENGE_H
+#ifndef TYPES_H
+#define TYPES_H
 // test web edittest web edit
 #include <stdint.h>
 #include <string>
+#include <sstream>
+
 // company's order identifier
 struct OrderIdentifier {
     OrderIdentifier() = default;
@@ -16,6 +18,8 @@ struct OrderIdentifier {
     uint16_t _desk{0};
     uint16_t _trader{0};
     uint32_t _sequence{0};
+    std::string Serialize() const;
+    OrderIdentifier& Deserialize(const char *data, uint32_t len);
 };
 
 struct Order{
@@ -26,5 +30,4 @@ struct Order{
 };
 
 enum class TradeAction {ENT_ORDER, CANCEL_ORDER, ORDER_TRADE};
-
 #endif
