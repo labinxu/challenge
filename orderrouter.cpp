@@ -12,3 +12,9 @@ bool OrderRouter::EnterOrder(uint16_t m, uint16_t d, uint32_t price, uint32_t qu
     _orderManager->OnTraderEnter(_order, price, quanlity);
 
 }
+
+// handle the message from the trader
+void OrderRouter::HandleMessage(const char *msg)
+{
+    
+}
