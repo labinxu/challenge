@@ -2,7 +2,8 @@
 #define IORDERMANAGER_H
 #include <stdint.h>
 #include <string>
-#include "challenge.h"
+#include "types.h"
+
 //
 // The order router will call these methods as it receives order operations from the
 // trader and exchange.

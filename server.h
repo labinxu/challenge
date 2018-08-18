@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <string>
 
-class Server:
+class Server
 {
 public:
     Server() = default;

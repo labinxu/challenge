@@ -7,7 +7,6 @@
 #include <unistd.h>
 #include "order.h"
 
-typedef Order_t Order;
 class Exchange
 {
  public:

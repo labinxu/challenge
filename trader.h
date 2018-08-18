@@ -3,20 +3,19 @@
 
 #include <vector>
 #include <memory>
-#include "challenge.h"
+#include "orderrouter.h"
+#include "types.h"
 
 class Trader{
 
 public:
-    Trader() = delete;
-    Trader(uint32_t identify)
-        :_identify(identify){}
-
-    bool EnterOrder(uint32_t price, uint32_t quantity);
-    bool CancleOrder(const OrderIdentifier& orderIdentifier);
+    Trader(OrderRouter *router, uint16_t t)
+        :_orderRouter(router),_trader(t){}
+    void start();
 
 private:
-    uint32_t _identify{0};
-    std::vector<std::shared_ptr<OrderIdentifier> > _orderIdentifies;
+    uint16_t _trader;
+    OrderRouter *_orderRouter;
 };
+
 #endif

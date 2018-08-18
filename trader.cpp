@@ -1,10 +1,21 @@
+#include <iostream>
 #include "trader.h"
 #include "orderrouter.h"
-
-bool Trader::EnterOrder(uint16_t m, uint16_t d, uint32_t price, uint32_t quantity)
+using namespace std;
+void Trader::start()
 {
-    auto sq = _orderIdentifies.size()+1;
-    auto odi = (std::make_shared<OrderIdentifier>(m, d, _identify, sq));
-    _orderIdentifies.push_back(odi);
-    _orderManager->OnTraderEnter(*odi, price, quantity);
+    uint16_t market, desk, sequence;
+    uint32_t quantity, price;
+    cout<<"input market, desk, sequence"<<endl;
+    cin>>market>>desk>>sequence;
+    cout<<"input quantity, price"<<endl;
+    cin>>quantity>>price;
+    OrderIdentifier io{market, desk, _trader, sequence};
+    if (_orderRouter->OnTraderEnter(io, quantity, price)){
+        cout<<"successful"<<endl;
+    }
+    else
+    {
+        cout<<"failed"<<endl;
+    }
 }

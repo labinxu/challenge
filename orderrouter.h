@@ -1,24 +1,22 @@
 #ifndef ORDER_ROUTER_H
 #define ORDER_ROUTER_H
-
+#include <list>
+#include <tuple>
 #include <string>
 #include <unistd.h>
-#include "server.h"
+#include <mutex>
 #include "types.h"
 #include "ordermanager.h"
 
-class OrderRouter: public Server{
-protected:
-    OrderRouter();
-    bool EnterOrder(const OrderIdentifier& orderIdentifier,
-                    uint32_t price, uint32_t quantity);
+typedef std::tuple<OrderIdentifier, uint32_t, uint32_t> TraderMsg;
 
-    bool CancelOrder(const std::string &exchangeIdentifier);
-
-    void HandleMessage(const char* msg);
-
+class OrderRouter{
+public:
+    OrderRouter():_orderManager(new OrderManager()){}
+    bool OnTraderEnter(const OrderIdentifier& aInternal,
+                       uint32_t aPrice, uint32_t aQuantity);
 private:
-    OrderManager* _orderManager;
+    OrderManager *_orderManager;
 };
 
 #endif

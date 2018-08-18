@@ -3,31 +3,43 @@
 // test web edittest web edit
 #include <stdint.h>
 #include <string>
-#include <sstream>
+#include <tuple>
 
 // company's order identifier
 struct OrderIdentifier {
-    OrderIdentifier() = default;
+     OrderIdentifier()
+          :_market(0),
+           _desk(0),
+           _trader(0),
+           _sequence(0){}
+
     OrderIdentifier(uint16_t m, uint16_t d, uint16_t t, uint32_t s)
         : _market(m)
         , _desk(d)
         ,_trader(t)
         ,_sequence(s){}
 
-    uint16_t _market{0};
-    uint16_t _desk{0};
-    uint16_t _trader{0};
-    uint32_t _sequence{0};
-    std::string Serialize() const;
-    OrderIdentifier& Deserialize(const char *data, uint32_t len);
+    uint16_t _market;
+    uint16_t _desk;
+    uint16_t _trader;
+    uint32_t _sequence;
 };
+inline bool operator == (const OrderIdentifier &lhs,
+                         const OrderIdentifier &rhs){
+     return lhs._market == rhs._market &&
+          lhs._desk == rhs._desk &&
+          lhs._trader==rhs._trader &&
+          lhs._sequence == rhs._sequence;
+}
+
+enum class OdrStatus {OrderEntered,OrderConfirmed, OrderTraded, TraderCancelled, OrderCancelled};
 
 struct Order{
-    OrderIdentifier _orderIdentifier;
-    uint32_t _price;
-    uint32_t _quantity;
-    std::string _changeIdentifier;
+     OrderIdentifier _internal;
+     uint32_t _price;
+     uint32_t _quantity;
+     OdrStatus _status;
+     std::string _external;
 };
 
-enum class TradeAction {ENT_ORDER, CANCEL_ORDER, ORDER_TRADE};
 #endif
