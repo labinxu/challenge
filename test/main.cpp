@@ -1,22 +1,27 @@
+#include <thread>
+#include <mutex>
+
 #include "test_orderidentifier.h"
 #include "../types.h"
-#include <iostream>
-#include <memory>
-#include <vector>
-#include <algorithm>
-#include <iterator>
-#include "../ordermanager.h"
+#include "../trader.h"
+#include "../orderrouter.h"
+#include "../exchange.h"
 using namespace std;
+
 int main()
 {
-    Orders orders;
-    Order order;
-    OrderIdentifier oi{1,2,3,4};
-    order._internal = oi;
-    order._price = 1;
-    order._quantity = 2;
-    order._external = "";
-    orders.insert(make_pair(oi, order));
+    auto router = new OrderRouter();
+    auto trader = new Trader(router, 1);
+    mutex mut;
+    auto exchange = new Exchange(router);
+    thread tdrthread(&Trader::start, trader);
+    thread exthread(&Exchange::start, exchange);
+
+
+    tdrthread.join();
+    exthread.join();
+
+    return 0;
 }
 
 // #include <iostream>

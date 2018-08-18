@@ -1,9 +1,12 @@
+#include <iostream>
 #include <algorithm>
 #include <tuple>
 #include <iterator>
 #include "ordermanager.h"
 using namespace std;
-
+void DisplayOrder(const Order &od){
+    cout<<"market:"<<od._internal._market<<" ;desk:"<<od._internal._desk<<" ;trader:"<<od._internal._trader<<" ;sequence:"<<od._internal._sequence<<" ;price:"<<od._price<<" ;quantity:"<<od._quantity<<endl;
+}
 Orders_i::value_type OrderManager::GetOrderByInternal(const Orders_i& orders,
                                                       const OrderIdentifier& aInternal) const{
     auto itc = std::find_if(begin(orders),
@@ -28,6 +31,7 @@ Orders_i::value_type OrderManager::GetOrderByExternal(const Orders_i& orders,
     return nullptr;
 
 }
+
 bool OrderManager::OnTraderEnter(const OrderIdentifier& aInternal, uint32_t aPrice,
                                  uint32_t aQuantity)
 {
@@ -37,9 +41,10 @@ bool OrderManager::OnTraderEnter(const OrderIdentifier& aInternal, uint32_t aPri
         return false;
     }
     // insert order into orders
-    _orders.insert(make_pair(aInternal,
-                             Order{aInternal,aPrice, aQuantity,
+    auto ait = _orders.insert(make_pair(aInternal,
+                             Order{aInternal, aPrice, aQuantity,
                                      OdrStatus::OrderEntered,""}));
+    DisplayOrder(ait.first->second);
     return true;
 }
 
@@ -66,6 +71,7 @@ bool OrderManager::OnTraderCancel(const OrderIdentifier& aInternal)
         }
         it->second._status = OdrStatus::TraderCancelled;
     }
+
     std::lock_guard<std::mutex> cguard(_cancelsMutex);
     _cancelledOrders.push_back(&(it->second));
     return true;
@@ -90,9 +96,11 @@ bool OrderManager::OnExchangeNew(const OrderIdentifier& aInternal,
     auto it = _orders.find(aInternal);
     // trader not enter the order
     if (it == _orders.end()){
-         return false;
+        cout<<"Order not found!"<<endl;
+        return false;
      }
     if (it->second._status != OdrStatus::OrderEntered){
+        cout<<"Status of order is wrong!"<<endl;
         return false;
     }
 
@@ -100,6 +108,7 @@ bool OrderManager::OnExchangeNew(const OrderIdentifier& aInternal,
     it->second._external = aExternal;
     std::lock_guard<std::mutex> guard(_activesMutex);
     _activeOrders.push_back(&(it->second));
+    cout<<"OnExchangeNew Successful"<<endl;
     return true;
 }
 
@@ -123,6 +132,7 @@ bool OrderManager::OnExchangeTrade(const std::string& aExternal,
 
     return true;
 }
+
 //
 // Assume the order status is not OrderCancelled or OrderEntered
 //

@@ -10,7 +10,7 @@ public:
     //Server(int port,const std::string &addr);
     void run();
 protected:
-    virtual void handle_message(const char* message) = 0;
+    virtual void HandleMessage(const char* message) = 0;
 };
 
 #endif
