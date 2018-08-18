@@ -4,9 +4,8 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <thread>
-#include "server.h"
 
-void Server::run()
+int main(int argc, char **argv)
 {
     int server_sockfd = -1;
     int client_sockfd = -1;
@@ -22,15 +21,15 @@ void Server::run()
     signal(SIGCHLD, SIG_IGN);
     while (1)
     {
+        char ch = '\0';
         client_len = sizeof(client_addr);
         printf("Server waiting\n");
         client_sockfd = accept(server_sockfd, (struct sockaddr *)&client_addr, &client_len);
         auto threadfn=[&](int client_sockfd){
             char buf[1024];
             while(true){
-                auto len = read(client_sockfd, buf, 1024);
-                buf[len+1] = '\0';
-                this->HandleMessage(buf);
+                read(client_sockfd, buf, 1024);
+
                 write(client_sockfd, buf, 1024);
             }
         };

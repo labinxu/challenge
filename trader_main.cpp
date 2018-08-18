@@ -1,40 +1,32 @@
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <stdio.h>
+#include <unistd.h>
+#include <cstdlib>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <unistd.h>
-#include <string.h>
-#include <stdlib.h>
-#include <fcntl.h>
-#include <sys/shm.h>
-#include <string>
 #include <iostream>
+#include <string>
 #include "types.h"
 #include "trader.h"
+
 using namespace std;
-const int MYPORT = 7000;
-const int BUFFER_SIZE = 1024;
 
-int main()
-{
-    int sock_cli = socket(AF_INET,SOCK_STREAM, 0);
-    struct sockaddr_in servaddr;
-    memset(&servaddr, 0, sizeof(servaddr));
-    servaddr.sin_family = AF_INET;
-    servaddr.sin_port = htons(MYPORT);
-    servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
-
-    if (connect(sock_cli, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0)
+int main(){
+    int sockfd = -1;
+    int len = 0;
+    struct sockaddr_in address;
+    int result;
+    sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    address.sin_family = AF_INET;
+    address.sin_addr.s_addr = inet_addr("127.0.0.1");
+    address.sin_port = htons(9736);
+    len = sizeof(address);
+    result = connect(sockfd, (struct sockaddr *)&address, (socklen_t)len);
+    if (result == -1)
     {
-        perror("connect failed");
+        perror("ops: client\n");
         exit(1);
     }
-
-    char sendbuf[BUFFER_SIZE];
-    char recvbuf[BUFFER_SIZE];
-    //uint32_t market, desk, sequence, trader,quantity, price;
     int action = 0;
+    char recvbuf[1024];
     std::string data;
     while (true)
     {
@@ -45,13 +37,7 @@ int main()
         {
             cout<<"input trader,market, desk, sequence,price,quantity, like 1,2,3,4"<<endl;
             cin>>data;
-            //sscanf(data.c_str(),"%d,%d,%d,%d",&trader,&market,&desk,&sequence, &price, &quantity);
-            //OrderIdentifier oi{market, desk, trader, sequence};
-            // encode action
-            //memcpy(sendbuf, (char*)&action, sizeof(int));
-            // encode oi
-            //memcpy(sendbuf+sizeof(int),(char*)&oi, sizeof(OrderIdentifier));
-            send(sock_cli, data.c_str(), data.size(), 0);
+            write(sockfd, data.c_str(), data.size());
             cout<<"send:"<<data<<endl;
             data="";
         }
@@ -61,16 +47,11 @@ int main()
         default:
             break;
         }
-
-        if(strcmp(sendbuf,"exit\n")==0)
-            break;
-        recv(sock_cli, recvbuf, sizeof(recvbuf),0);
-        cout<<recvbuf<<endl;
-        memset(sendbuf, 0, sizeof(sendbuf));
+        auto len = read(sockfd, recvbuf, 1024);
+        recvbuf[len+1]='\0';
+        cout<<"char from server = "<< recvbuf<<endl;
         memset(recvbuf, 0, sizeof(recvbuf));
-
     }
-
-    close(sock_cli);
+    close(sockfd);
     return 0;
 }
