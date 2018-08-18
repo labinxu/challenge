@@ -7,10 +7,11 @@ class Server
 {
 public:
     Server() = default;
-    //Server(int port,const std::string &addr);
     void run();
 protected:
-    virtual void HandleMessage(const char* message) = 0;
+    virtual void HandleConnection(int connect);
+    virtual std::string HandleMessage(char* message) = 0;
+
 };
 
 #endif

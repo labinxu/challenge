@@ -25,8 +25,9 @@ int main(){
         perror("ops: client\n");
         exit(1);
     }
+
     int action = 0;
-    char recvbuf[1024];
+    char recvbuf[128];
     std::string data;
     while (true)
     {
@@ -35,11 +36,16 @@ int main(){
         switch (action){
         case 1:
         {
-            cout<<"input trader,market, desk, sequence,price,quantity, like 1,2,3,4"<<endl;
+            cout<<"input market, desk, trader, sequence,price,quantity, like 1,2,3,4,5,6"<<endl;
             cin>>data;
+            data = "1," + data;
             write(sockfd, data.c_str(), data.size());
             cout<<"send:"<<data<<endl;
             data="";
+            char buf[128];
+            auto len = read(sockfd, buf, 128);
+            buf[len]='\0';
+            cout<<"status:"<< buf<<endl;
         }
         break;
         case 2:
@@ -47,10 +53,6 @@ int main(){
         default:
             break;
         }
-        auto len = read(sockfd, recvbuf, 1024);
-        recvbuf[len+1]='\0';
-        cout<<"char from server = "<< recvbuf<<endl;
-        memset(recvbuf, 0, sizeof(recvbuf));
     }
     close(sockfd);
     return 0;

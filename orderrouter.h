@@ -21,7 +21,7 @@ public:
     bool OnExchangeNew(const OrderIdentifier& aInternal,
                                      const std::string& aExternal);
 
-    void HandleMessage(const char *msg);
+    std::string HandleMessage(char *msg);
 private:
     OrderManager *_orderManager;
 };

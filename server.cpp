@@ -4,7 +4,22 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <thread>
+#include <iostream>
+#include <string>
 #include "server.h"
+
+
+void Server::HandleConnection(int client_sockfd){
+    std::cout<<"HandleConnection"<<std::endl;
+    char buf[1024];
+    while(true){
+        auto len = read(client_sockfd, buf, 1024);
+        buf[len+1] = '\0';
+        std::string ret = this->HandleMessage(buf);
+        //std::cout<<"response:"<<ret<<std::endl;
+        write(client_sockfd, ret.c_str(), ret.size());
+    }
+}
 
 void Server::run()
 {
@@ -25,28 +40,7 @@ void Server::run()
         client_len = sizeof(client_addr);
         printf("Server waiting\n");
         client_sockfd = accept(server_sockfd, (struct sockaddr *)&client_addr, &client_len);
-        auto threadfn=[&](int client_sockfd){
-            char buf[1024];
-            while(true){
-                auto len = read(client_sockfd, buf, 1024);
-                buf[len+1] = '\0';
-                this->HandleMessage(buf);
-                write(client_sockfd, buf, 1024);
-            }
-        };
-        std::thread t(threadfn, client_sockfd);
+        std::thread t(&Server::HandleConnection,this, client_sockfd);
         t.detach();
-        // if (fork() == 0)
-        // {
-        //     char buf[1024];
-        //     while(true){
-        //         read(client_sockfd, buf, 1024);
-        //         write(client_sockfd, buf, 1024);
-        //     }
-        // }
-        // else
-        // {
-        //     close(client_sockfd);
-        // }
     }
 }
