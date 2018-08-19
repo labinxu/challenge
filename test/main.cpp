@@ -1,26 +1,26 @@
-#include <thread>
-#include <mutex>
-
 #include "test_orderidentifier.h"
-#include "../types.h"
-#include "../trader.h"
-#include "../orderrouter.h"
-#include "../exchange.h"
+#include <iostream>
 using namespace std;
 
 int main()
 {
-    auto router = new OrderRouter();
-    auto trader = new Trader(router, 1);
-    mutex mut;
-    auto exchange = new Exchange(router);
-    thread tdrthread(&Trader::start, trader);
-    thread exthread(&Exchange::start, exchange);
-
-
-    tdrthread.join();
-    exthread.join();
-
+    int action = 0;
+    while (true)
+    {
+        cout<<"Input action:[1: Enter Order] ,[2:Cancell Order]"<<endl;
+        cin>>action;
+        cout<<action<<endl;
+        switch (action){
+        case 1:
+            break;
+        default:
+            cout<<"Please input correct action"<<endl;
+            break;
+        }
+        action = 0;
+        cin.clear();
+        cin.ignore();
+    }
     return 0;
 }
 
