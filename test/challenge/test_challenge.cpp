@@ -1,5 +1,8 @@
 #include <iostream>
+#include <cstring>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 #include <thread>
 #include <cstdlib>
 #include <netinet/in.h>

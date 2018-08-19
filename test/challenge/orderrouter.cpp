@@ -2,6 +2,7 @@
 #include <cstdio>
 #include <algorithm>
 #include <sstream>
+#include <cstring>
 #include "orderrouter.h"
 
 using namespace std;

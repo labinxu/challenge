@@ -4,6 +4,7 @@
 #include <arpa/inet.h>
 #include <iostream>
 #include <string>
+#include <cstring>
 #include "types.h"
 
 using namespace std;

@@ -7,6 +7,7 @@
 #include <thread>
 #include <iostream>
 #include <string>
+#include <cstring>
 #include "server.h"
 
 void Server::HandleConnection(int client_sockfd){
