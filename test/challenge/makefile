@@ -5,16 +5,16 @@ INC=
 LIB=-lpthread
 CC_FLAG=-Wall -std=c++11
 EXCHANGE=exchange
-EXCHANGEOBJ=../exchange_main.o
+EXCHANGEOBJ=exchange_main.o
 
 TRADER=trader
-TRADEROBJ = ../trader_main.o
+TRADEROBJ = trader_main.o
 ROUTER=router
-ROUTEROBJ = ../orderrouter_main.o
+ROUTEROBJ = orderrouter_main.o
 TESTER=test
 TESTEROBJ=test_challenge.o
 
-OBJ= ../orderrouter.o ../ordermanager.o  ../server.o
+OBJ= orderrouter.o ordermanager.o  server.o
 
 CC=g++
 TARGETS = $(ROUTER) $(TRADER) $(EXCHANGE) $(TESTER)

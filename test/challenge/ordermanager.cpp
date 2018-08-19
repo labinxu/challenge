@@ -63,6 +63,7 @@ bool OrderManager::OnTraderCancel(const OrderIdentifier& aInternal)
 
     // The Trader made a mark for cancel an order,
     // and put the order into cancels ,
+    // after the exchange canlled received the set status to Order cancelled
     std::lock_guard<std::mutex> guard(_ordersMutex);
     auto it = _orders.find(aInternal);
     if (it != _orders.end()){
